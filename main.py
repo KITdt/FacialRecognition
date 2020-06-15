@@ -1,13 +1,10 @@
 import cv2
-#import imutils
-#import argparse
 import os
 import face_recognition
 import datetime
 import pickle
 import numpy as np
 # from mtcnn.mtcnn import MTCNN
-#from keras import backend as K
 
 def compareFaceWithDataset (listOfFaceEncodingsKnown, faceEncodingToCompare, similarityThreshold = 0.6):
 	distanceResult = np.empty((0))
@@ -45,7 +42,7 @@ def detect (image, method): #0: MTCNN, 1: haar-cascade, 2: hog
      boxOfFaces = []
      time = datetime.datetime.now()
      # if (method == "MTCNN"):
-     #      print ("dung mtcnn")
+     #      print ("use mtcnn")
      #      image_rgb = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
      #      detector = MTCNN()
      #      faces = detector.detect_faces(image_rgb)
@@ -89,7 +86,6 @@ def match (image, encodings, data, thresholdConfidence = 30.0):
      confidences = []
      time = datetime.datetime.now()
      for encoding in encodings:
-          # compareResult = face_recognition.compare_faces(data["encodings"],encoding)
           compareResult = compareFaceWithDataset(data["encodings"],encoding)
           name = "Unknown"
           confidence = 100.0
@@ -110,7 +106,7 @@ def match (image, encodings, data, thresholdConfidence = 30.0):
      return (time_recognition, names, confidences)
 
 def faceRecognition (pathToImage, pathToSave, method_detect = 0):
-     pathToSaveEncoding = "/home/vnpt/facialRecognition/data/dataset.pickle"
+     pathToSaveEncoding = "./dataset.pickle"
      data = loadDataFromPickleFile(pathToSaveEncoding)
      image = cv2.imread(pathToImage)
      timeDetection, boxes = detect(image,method_detect)
@@ -129,9 +125,9 @@ def faceRecognition (pathToImage, pathToSave, method_detect = 0):
      return (round(timeDetection,4),round(timeEncoding,4),round(timeRecognition,4))
 
 def initiate ():    #this fuction to make face dataset and encoding for recognition
-     basePeople = "/home/vnpt/facialRecognition/data/people/"
-     baseFace = "/home/vnpt/facialRecognition/data/faces/"
-     pathToSaveEncoding = "/home/vnpt/facialRecognition/data/dataset.pickle"
+     basePeople = "./data/people/"
+     baseFace = "./data/faces/"
+     pathToSaveEncoding = "./dataset.pickle"
      padding = 0
      knownNames = []
      knownEncodings = []
